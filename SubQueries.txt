@@ -1,0 +1,1100 @@
+mysql> select ename from emp;
++--------+
+| ename  |
++--------+
+| SMITH  |
+| ALLEN  |
+| WARD   |
+| JONES  |
+| MARTIN |
+| BLAKE  |
+| CLARK  |
+| SCOTT  |
+| KING   |
+| TURNER |
+| ADAMS  |
+| JAMES  |
+| FORD   |
+| MILLER |
++--------+
+14 rows in set (0.00 sec)
+
+mysql> select(select ename from emp);
+ERROR 1242 (21000): Subquery returns more than 1 row
+
+mysql> select ename, (select ename from emp);
+ERROR 1054 (42S22): Unknown column 'ename' in 'field list'
+
+mysql>
+mysql> select "Hello";
++-------+
+| Hello |
++-------+
+| Hello |
++-------+
+1 row in set (0.00 sec)
+
+mysql> select "Hello"(select ename from emp);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select ename from emp)' at line 1
+mysql>
+mysql> select "Hello"(select * from emp);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select * from emp)' at line 1
+mysql>
+mysql> select(select 1,2);
+ERROR 1241 (21000): Operand should contain 1 column(s)
+mysql>
+mysql> select "Hello"(select ename from emp where job = "MANAGER");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select ename from emp where job = "MANAGER")' at line 1
+mysql>
+mysql>
+mysql> select "Hello"(select ename from emp where empno = "7788");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(select ename from emp where empno = "7788")' at line 1
+mysql>
+mysql> select "Hello",(select ename from emp where job = "MANAGER");
+ERROR 1242 (21000): Subquery returns more than 1 row
+mysql>
+mysql>
+
+
+-------------------Single row subqueries-----------------------------
+
+
+mysql> select "Hello",(select ename from emp where empno = "7788");
++-------+----------------------------------------------+
+| Hello | (select ename from emp where empno = "7788") |
++-------+----------------------------------------------+
+| Hello | SCOTT                                        |
++-------+----------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql> select "Hello",(select ename from emp where empno = "77883");
++-------+-----------------------------------------------+
+| Hello | (select ename from emp where empno = "77883") |
++-------+-----------------------------------------------+
+| Hello | NULL                                          |
++-------+-----------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select "Hello",(select ename from emp where empno = "77883")"scalar subquery";
++-------+-----------------+
+| Hello | scalar subquery |
++-------+-----------------+
+| Hello | NULL            |
++-------+-----------------+
+1 row in set (0.00 sec)
+
+mysql> (select ename from emp where empno = "77883")"scalar subquery";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"scalar subquery"' at line 1
+
+mysql>
+mysql>
+mysql> select ename from emp where empno = "77883";
+Empty set (0.00 sec)
+
+mysql> select count(ename) from emp where empno = "77883";
++--------------+
+| count(ename) |
++--------------+
+|            0 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql>
+mysql> select sal from emp where ename = "james";
++------+
+| sal  |
++------+
+|  950 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select sal from emp where ename = "king";
++------+
+| sal  |
++------+
+| 5000 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select 5000 - 950;
++------------+
+| 5000 - 950 |
++------------+
+|       4050 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select (5000) ,(950);
++------+-----+
+| 5000 | 950 |
++------+-----+
+| 5000 | 950 |
++------+-----+
+1 row in set (0.00 sec)
+
+mysql> select (select sal from emp where ename = "king")king,(select sal from emp where ename = "james")james;
++------+-------+
+| king | james |
++------+-------+
+| 5000 |   950 |
++------+-------+
+1 row in set (0.00 sec)
+
+mysql> select (select sal from emp where ename = "king") - (select sal from emp where ename = "james")R1;
++------+
+| R1   |
++------+
+| 4050 |
++------+
+1 row in set (0.00 sec)
+
+mysql>
+mysql>
+mysql> select sal from emp where deptno = 20;
++------+
+| sal  |
++------+
+|  800 |
+| 2975 |
+| 3000 |
+| 1100 |
+| 3000 |
++------+
+5 rows in set (0.00 sec)
+
+mysql> select sal from emp where deptno = 10;
++------+
+| sal  |
++------+
+| 2450 |
+| 5000 |
+| 1300 |
++------+
+3 rows in set (0.00 sec)
+
+mysql> select sum(sal) from emp where deptno = 10;
++----------+
+| sum(sal) |
++----------+
+|     8750 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select sum(sal) from emp where deptno = 20;
++----------+
+| sum(sal) |
++----------+
+|    10875 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select(select sum(sal) from emp where deptno = 10)R1,(select sum(sal) from emp where deptno = 20)R2;
++------+-------+
+| R1   | R2    |
++------+-------+
+| 8750 | 10875 |
++------+-------+
+1 row in set (0.00 sec)
+
+mysql> select(select sum(sal) from emp where deptno = 10)-(select sum(sal) from emp where deptno = 20)Result;
++--------+
+| Result |
++--------+
+|  -2125 |
++--------+
+1 row in set (0.00 sec)
+
+
+mysql> select(select sum(sal) from emp where deptno = 20)-(select sum(sal) from emp where deptno = 10)Result;
++--------+
+| Result |
++--------+
+|   2125 |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where deptno = (select 10);
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from emp where deptno = (select 50);
+Empty set (0.00 sec)
+
+mysql> select * from emp where deptno = 50;
+Empty set (0.00 sec)
+
+mysql> select * from emp where deptno = (select 6+4);
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+3 rows in set (0.00 sec)
+
+
+
+------------------------------Comparision---------------------
+
+
+
+mysql> select * from emp where sal = (select max(sal) from emp);
++-------+-------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
++-------+-------+-----------+------+------------+------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where sal = (select min(sal) from emp);
++-------+-------+-------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB   | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-------+------+------------+------+------+--------+
+|  7369 | SMITH | CLERK | 7902 | 1980-12-17 |  800 | NULL |     20 |
++-------+-------+-------+------+------------+------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where sal = (select max(sal) from emp) or sal = (select min(sal) from emp);
++-------+-------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7369 | SMITH | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
++-------+-------+-----------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emp where sal = (select min(sal) from emp) or sal = (select max(sal) from emp);
++-------+-------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7369 | SMITH | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
++-------+-------+-----------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> -- 2nd highest sal;
+mysql> select * from emp order by sal desc;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
++-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> -- 2nd highest sal = 3000;
+mysql> select max(sal) from emp where sal < (select max(sal) from emp);
++----------+
+| max(sal) |
++----------+
+|     3000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select max(sal) from emp where sal not in(select max(sal) from emp);
++----------+
+| max(sal) |
++----------+
+|     3000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select max(sal) from emp where sal < (select max(sal) from emp);
++----------+
+| max(sal) |
++----------+
+|     3000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select max(sal) from emp where sal in(select max(sal) from emp);
++----------+
+| max(sal) |
++----------+
+|     5000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> -- 3rd highest sal = 3000;
+mysql> select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp));
++----------+
+| max(sal) |
++----------+
+|     2975 |
++----------+
+1 row in set (0.00 sec)
+
+
+mysql> select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp)));
++----------+
+| max(sal) |
++----------+
+|     2850 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where sal = (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp))));
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7698 | BLAKE | MANAGER | 7839 | 1981-05-01 | 2850 | NULL |     30 |
++-------+-------+---------+------+------------+------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where sal = (select max(sal) from emp where sal < (select max(sal) from emp where sal < (select max(sal) from emp)));
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7566 | JONES | MANAGER | 7839 | 1986-04-02 | 2975 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+1 row in set (0.00 sec)
+
+
+mysql> select * from emp where sal = (select max(sal) from emp where sal < (select max(sal) from emp));
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7788 | SCOTT | ANALYST | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1984-12-03 | 3000 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select sal from emp order by sal desc limit 1,1;
++------+
+| sal  |
++------+
+| 3000 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where sal = (select sal from emp order by sal desc limit 1,1);
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7788 | SCOTT | ANALYST | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7902 | FORD  | ANALYST | 7566 | 1984-12-03 | 3000 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emp order by sal desc limit 1,1;
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7788 | SCOTT | ANALYST | 7566 | 1987-04-19 | 3000 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select sal from emp where ename = "blake";
++------+
+| sal  |
++------+
+| 2850 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp where sal > 2850;
++-------+-------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7566 | JONES | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7902 | FORD  | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
++-------+-------+-----------+------+------------+------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from emp where sal >(select sal from emp where ename = "blake");
++-------+-------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7566 | JONES | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7902 | FORD  | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
++-------+-------+-----------+------+------------+------+------+--------+
+4 rows in set (0.00 sec)
+
+mysql>
+mysql> select * from emp where job=(select job from emp where ename = "jones");
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7566 | JONES | MANAGER | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7698 | BLAKE | MANAGER | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7782 | CLARK | MANAGER | 7839 | 1983-06-09 | 2450 | NULL |     10 |
++-------+-------+---------+------+------------+------+------+--------+
+3 rows in set (0.00 sec)
+
+---------------------------- mutli row subqueries-----------------
+
+
+mysql> select job, max(sal) from emp group by job;
++-----------+----------+
+| job       | max(sal) |
++-----------+----------+
+| CLERK     |     1300 |
+| SALESMAN  |     1600 |
+| MANAGER   |     2975 |
+| ANALYST   |     3000 |
+| PRESIDENT |     5000 |
++-----------+----------+
+5 rows in set (0.00 sec)
+
+
+mysql> --2nd max salary in each job
+mysql> select job,max(sal) from emp where sal not in (select max(sal) from emp group by job) group by job;
++----------+----------+
+| job      | max(sal) |
++----------+----------+
+| CLERK    |     1100 |
+| SALESMAN |     1500 |
+| MANAGER  |     2850 |
++----------+----------+
+3 rows in set (0.00 sec)
+
+--------------------------in, not in, any, some, all-----------------------------
+
+mysql> select sal from emp where ename in("adams", "clark");
++------+
+| sal  |
++------+
+| 2450 |
+| 1100 |
++------+
+2 rows in set (0.01 sec)
+
+mysql> select * from emp where sal in (select sal from emp where ename in("adams", "clark"));
++-------+-------+---------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+---------+------+------------+------+------+--------+
+|  7782 | CLARK | MANAGER | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  7876 | ADAMS | CLERK   | 7788 | 1987-05-23 | 1100 | NULL |     20 |
++-------+-------+---------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from emp where sal not in (select sal from emp where ename in("adams", "clark"));
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+12 rows in set (0.00 sec)
+
+mysql> select * from emp where sal > any(select sal from emp where ename in("adams", "clark")) order by sal;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+11 rows in set (0.00 sec)
+
+mysql> select * from emp where sal < any(select sal from emp where ename in("adams", "clark")) order by sal;
++-------+--------+----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+----------+------+------------+------+------+--------+
+|  7369 | SMITH  | CLERK    | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7900 | JAMES  | CLERK    | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|  7876 | ADAMS  | CLERK    | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7934 | MILLER | CLERK    | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7844 | TURNER | SALESMAN | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7499 | ALLEN  | SALESMAN | 7698 | 1981-02-20 | 1600 |  300 |     30 |
++-------+--------+----------+------+------------+------+------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select * from emp where sal > some(select sal from emp where ename in("adams", "clark")) order by sal;
++-------+--------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+------------+------+------+--------+
+|  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
++-------+--------+-----------+------+------------+------+------+--------+
+11 rows in set (0.00 sec)
+
+mysql> select * from emp where sal < some(select sal from emp where ename in("adams", "clark")) order by sal;
++-------+--------+----------+------+------------+------+------+--------+
+| EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+--------+----------+------+------------+------+------+--------+
+|  7369 | SMITH  | CLERK    | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7900 | JAMES  | CLERK    | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|  7876 | ADAMS  | CLERK    | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  7934 | MILLER | CLERK    | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  7844 | TURNER | SALESMAN | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  7499 | ALLEN  | SALESMAN | 7698 | 1981-02-20 | 1600 |  300 |     30 |
++-------+--------+----------+------+------------+------+------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select * from emp where sal > all (select sal from emp where ename in("adams", "clark")) order by sal;
++-------+-------+-----------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-----------+------+------------+------+------+--------+
+|  7698 | BLAKE | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7566 | JONES | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  7788 | SCOTT | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  7902 | FORD  | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|  7839 | KING  | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
++-------+-------+-----------+------+------------+------+------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp where sal < all (select sal from emp where ename in("adams", "clark")) order by sal;
++-------+-------+-------+------+------------+------+------+--------+
+| EMPNO | ENAME | JOB   | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++-------+-------+-------+------+------------+------+------+--------+
+|  7369 | SMITH | CLERK | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  7900 | JAMES | CLERK | 7698 | 1982-12-13 |  950 | NULL |     30 |
++-------+-------+-------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+mysql> select * from(select * from emp);
+ERROR 1248 (42000): Every derived table must have its own alias
+mysql>
+mysql> select ename from(select * from emp)E;
++--------+
+| ENAME  |
++--------+
+| SMITH  |
+| ALLEN  |
+| WARD   |
+| JONES  |
+| MARTIN |
+| BLAKE  |
+| CLARK  |
+| SCOTT  |
+| KING   |
+| TURNER |
+| ADAMS  |
+| JAMES  |
+| FORD   |
+| MILLER |
++--------+
+14 rows in set (0.00 sec)
+
+mysql> select row_number() over()R1, emp.* from emp;
++----+-------+--------+-----------+------+------------+------+------+--------+
+| R1 | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++----+-------+--------+-----------+------+------------+------+------+--------+
+|  1 |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|  2 |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  3 |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  4 |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  5 |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|  6 |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  7 |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  8 |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  9 |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+| 10 |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+| 11 |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+| 12 |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+| 13 |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+| 14 |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++----+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> select mod(row_number() over(),2)R1, emp.* from emp;
++------+-------+--------+-----------+------+------------+------+------+--------+
+| R1   | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++------+-------+--------+-----------+------+------------+------+------+--------+
+|    1 |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|    0 |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|    1 |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|    0 |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|    1 |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|    0 |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|    1 |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|    0 |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|    1 |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|    0 |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|    1 |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|    0 |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|    1 |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|    0 |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++------+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> select R1 from(select mod(row_number() over(),2)R1, emp.* from emp)t1;
++------+
+| R1   |
++------+
+|    1 |
+|    0 |
+|    1 |
+|    0 |
+|    1 |
+|    0 |
+|    1 |
+|    0 |
+|    1 |
+|    0 |
+|    1 |
+|    0 |
+|    1 |
+|    0 |
++------+
+14 rows in set (0.00 sec)
+
+mysql> select R1,ename,empno from(select mod(row_number() over(),2)R1, emp.* from emp)t1;
++------+--------+-------+
+| R1   | ename  | empno |
++------+--------+-------+
+|    1 | SMITH  |  7369 |
+|    0 | ALLEN  |  7499 |
+|    1 | WARD   |  7521 |
+|    0 | JONES  |  7566 |
+|    1 | MARTIN |  7654 |
+|    0 | BLAKE  |  7698 |
+|    1 | CLARK  |  7782 |
+|    0 | SCOTT  |  7788 |
+|    1 | KING   |  7839 |
+|    0 | TURNER |  7844 |
+|    1 | ADAMS  |  7876 |
+|    0 | JAMES  |  7900 |
+|    1 | FORD   |  7902 |
+|    0 | MILLER |  7934 |
++------+--------+-------+
+14 rows in set (0.00 sec)
+
+mysql> select R1,ename,empno from(select mod(row_number() over(),2)R1, emp.* from emp)t1 where R1 = 1;
++------+--------+-------+
+| R1   | ename  | empno |
++------+--------+-------+
+|    1 | SMITH  |  7369 |
+|    1 | WARD   |  7521 |
+|    1 | MARTIN |  7654 |
+|    1 | CLARK  |  7782 |
+|    1 | KING   |  7839 |
+|    1 | ADAMS  |  7876 |
+|    1 | FORD   |  7902 |
++------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select R1,ename,empno from(select mod(row_number() over(),2)R1, emp.* from emp)t1 where R1 = 0;
++------+--------+-------+
+| R1   | ename  | empno |
++------+--------+-------+
+|    0 | ALLEN  |  7499 |
+|    0 | JONES  |  7566 |
+|    0 | BLAKE  |  7698 |
+|    0 | SCOTT  |  7788 |
+|    0 | TURNER |  7844 |
+|    0 | JAMES  |  7900 |
+|    0 | MILLER |  7934 |
++------+--------+-------+
+7 rows in set (0.00 sec)
+
+mysql> select count(*) from emp group by job;
++----------+
+| count(*) |
++----------+
+|        4 |
+|        4 |
+|        3 |
+|        2 |
+|        1 |
++----------+
+5 rows in set (0.00 sec)
+
+
+mysql> select * from (select count(*)R1 from emp group by job)t2;
++----+
+| R1 |
++----+
+|  4 |
+|  4 |
+|  3 |
+|  2 |
+|  1 |
++----+
+5 rows in set (0.00 sec)
+
+mysql> select max(R1) from (select count(*)R1 from emp group by job)t2;
++---------+
+| max(R1) |
++---------+
+|       4 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select job,max(R1) from (select job, count(*)R1 from emp group by job)t2;
++-------+---------+
+| job   | max(R1) |
++-------+---------+
+| CLERK |       4 |
++-------+---------+
+1 row in set (0.00 sec)
+
+mysql> select dense_rank() over(order by sal desc)R1, emp.* from emp;
++----+-------+--------+-----------+------+------------+------+------+--------+
+| R1 | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++----+-------+--------+-----------+------+------------+------+------+--------+
+|  1 |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|  2 |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|  2 |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|  3 |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|  4 |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|  5 |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|  6 |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|  7 |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|  8 |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|  9 |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  9 |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+| 10 |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+| 11 |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+| 12 |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
++----+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> select * from(select dense_rank() over(order by sal desc)R1, emp.* from emp)t3 where R1 = 3;
++----+-------+-------+---------+------+------------+------+------+--------+
+| R1 | EMPNO | ENAME | JOB     | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++----+-------+-------+---------+------+------------+------+------+--------+
+|  3 |  7566 | JONES | MANAGER | 7839 | 1986-04-02 | 2975 | NULL |     20 |
++----+-------+-------+---------+------+------------+------+------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from(select dense_rank() over(order by sal desc)R1, emp.* from emp)t3 where R1 = 9;
++----+-------+--------+----------+------+------------+------+------+--------+
+| R1 | EMPNO | ENAME  | JOB      | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++----+-------+--------+----------+------+------------+------+------+--------+
+|  9 |  7521 | WARD   | SALESMAN | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|  9 |  7654 | MARTIN | SALESMAN | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
++----+-------+--------+----------+------+------------+------+------+--------+
+2 rows in set (0.00 sec)
+
+
+
+-----------------------------using From Clause------------------
+
+
+mysql> select @x : = @x + 1 from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ': = @x + 1 from emp' at line 1
+mysql>
+mysql> select @x : = @x + 1 R1 from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ': = @x + 1 R1 from emp' at line 1
+mysql>
+mysql>
+mysql> select @x : = @x+1 from emp;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ': = @x+1 from emp' at line 1
+mysql>
+mysql>
+mysql> select @x:=@x+1 from emp;
++----------+
+| @x:=@x+1 |
++----------+
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
+|     NULL |
++----------+
+14 rows in set, 1 warning (0.00 sec)
+
+mysql> set @x := 0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @x:=@x+1 from emp;
++----------+
+| @x:=@x+1 |
++----------+
+|        1 |
+|        2 |
+|        3 |
+|        4 |
+|        5 |
+|        6 |
+|        7 |
+|        8 |
+|        9 |
+|       10 |
+|       11 |
+|       12 |
+|       13 |
+|       14 |
++----------+
+14 rows in set, 1 warning (0.00 sec)
+
+mysql> select @x:=@x+1 from emp;
++----------+
+| @x:=@x+1 |
++----------+
+|       15 |
+|       16 |
+|       17 |
+|       18 |
+|       19 |
+|       20 |
+|       21 |
+|       22 |
+|       23 |
+|       24 |
+|       25 |
+|       26 |
+|       27 |
+|       28 |
++----------+
+14 rows in set, 1 warning (0.00 sec)
+
+mysql> select @x:=@x+1 from emp;
++----------+
+| @x:=@x+1 |
++----------+
+|       29 |
+|       30 |
+|       31 |
+|       32 |
+|       33 |
+|       34 |
+|       35 |
+|       36 |
+|       37 |
+|       38 |
+|       39 |
+|       40 |
+|       41 |
+|       42 |
++----------+
+14 rows in set, 1 warning (0.00 sec)
+
+mysql> set @x := 0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @x:=@x+1 from emp;
++----------+
+| @x:=@x+1 |
++----------+
+|        1 |
+|        2 |
+|        3 |
+|        4 |
+|        5 |
+|        6 |
+|        7 |
+|        8 |
+|        9 |
+|       10 |
+|       11 |
+|       12 |
+|       13 |
+|       14 |
++----------+
+14 rows in set, 1 warning (0.00 sec)
+
+mysql> set @x := 0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @x:=@x+1 R1, emp.* from emp;
++------+-------+--------+-----------+------+------------+------+------+--------+
+| R1   | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++------+-------+--------+-----------+------+------------+------+------+--------+
+|    1 |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|    2 |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|    3 |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|    4 |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|    5 |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|    6 |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|    7 |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|    8 |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|    9 |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|   10 |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|   11 |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|   12 |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|   13 |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|   14 |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++------+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set, 1 warning (0.00 sec)
+
+
+mysql> --join or cartesian product of two table;
+mysql> select @x := @x+1 R1, emp.* from emp, (select @x := 0) t5;
++------+-------+--------+-----------+------+------------+------+------+--------+
+| R1   | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++------+-------+--------+-----------+------+------------+------+------+--------+
+|    1 |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|    2 |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|    3 |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|    4 |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|    5 |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|    6 |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|    7 |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|    8 |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|    9 |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|   10 |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|   11 |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|   12 |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|   13 |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|   14 |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++------+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set, 2 warnings (0.00 sec)
+
+mysql> select @x := @x+1 R1,row_number()over()R2, emp.* from emp, (select @x := 0) t5;
++------+----+-------+--------+-----------+------+------------+------+------+--------+
+| R1   | R2 | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++------+----+-------+--------+-----------+------+------------+------+------+--------+
+|    1 |  1 |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|    2 |  2 |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|    3 |  3 |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|    4 |  4 |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|    5 |  5 |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|    6 |  6 |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|    7 |  7 |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|    8 |  8 |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|    9 |  9 |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|   10 | 10 |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|   11 | 11 |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|   12 | 12 |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
+|   13 | 13 |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|   14 | 14 |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
++------+----+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set, 2 warnings (0.00 sec)
+
+
+---------------------------Exist, not Exist-----------------------------
+
+
+mysql> select * from dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
++--------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select deptno from dept;
++--------+
+| deptno |
++--------+
+|     10 |
+|     20 |
+|     30 |
+|     40 |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select distinct deptno from emp;
++--------+
+| deptno |
++--------+
+|     10 |
+|     20 |
+|     30 |
++--------+
+3 rows in set (0.00 sec)
+
+
+mysql> select * from dept where not exists (select deptno from emp where emp.deptno=dept.deptno);
++--------+------------+--------+
+| DEPTNO | DNAME      | LOC    |
++--------+------------+--------+
+|     40 | OPERATIONS | BOSTON |
++--------+------------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from dept where exists (select deptno from emp where emp.deptno=dept.deptno);
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
++--------+------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select  * from dept, emp where emp.deptno = dept.deptno;
++--------+------------+---------+-------+--------+-----------+------+------------+------+------+--------+
+| DEPTNO | DNAME      | LOC     | EMPNO | ENAME  | JOB       | MGR  | HIREDATE   | SAL  | COMM | DEPTNO |
++--------+------------+---------+-------+--------+-----------+------+------------+------+------+--------+
+|     10 | ACCOUNTING | NEWYORK |  7782 | CLARK  | MANAGER   | 7839 | 1983-06-09 | 2450 | NULL |     10 |
+|     10 | ACCOUNTING | NEWYORK |  7839 | KING   | PRESIDENT | NULL | 1981-11-17 | 5000 | NULL |     10 |
+|     10 | ACCOUNTING | NEWYORK |  7934 | MILLER | CLERK     | 7782 | 1982-01-23 | 1300 | NULL |     10 |
+|     20 | RESEARCH   | DALLAS  |  7369 | SMITH  | CLERK     | 7902 | 1980-12-17 |  800 | NULL |     20 |
+|     20 | RESEARCH   | DALLAS  |  7566 | JONES  | MANAGER   | 7839 | 1986-04-02 | 2975 | NULL |     20 |
+|     20 | RESEARCH   | DALLAS  |  7788 | SCOTT  | ANALYST   | 7566 | 1987-04-19 | 3000 | NULL |     20 |
+|     20 | RESEARCH   | DALLAS  |  7876 | ADAMS  | CLERK     | 7788 | 1987-05-23 | 1100 | NULL |     20 |
+|     20 | RESEARCH   | DALLAS  |  7902 | FORD   | ANALYST   | 7566 | 1984-12-03 | 3000 | NULL |     20 |
+|     30 | SALES      | CHICAGO |  7499 | ALLEN  | SALESMAN  | 7698 | 1981-02-20 | 1600 |  300 |     30 |
+|     30 | SALES      | CHICAGO |  7521 | WARD   | SALESMAN  | 7698 | 1981-02-22 | 1250 |  500 |     30 |
+|     30 | SALES      | CHICAGO |  7654 | MARTIN | SALESMAN  | 7698 | 1981-09-28 | 1250 | 1400 |     30 |
+|     30 | SALES      | CHICAGO |  7698 | BLAKE  | MANAGER   | 7839 | 1981-05-01 | 2850 | NULL |     30 |
+|     30 | SALES      | CHICAGO |  7844 | TURNER | SALESMAN  | 7698 | 1981-09-08 | 1500 |    0 |     30 |
+|     30 | SALES      | CHICAGO |  7900 | JAMES  | CLERK     | 7698 | 1982-12-13 |  950 | NULL |     30 |
++--------+------------+---------+-------+--------+-----------+------+------------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> select  distinct dept.* from dept, emp where emp.deptno = dept.deptno;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
++--------+------------+---------+
+3 rows in set (0.00 sec)

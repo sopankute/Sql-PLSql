@@ -1,0 +1,443 @@
+
+mysql> use demo;
+Database changed
+
+mysql> select 1001 + 1;
++----------+
+| 1001 + 1 |
++----------+
+|     1002 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select 1001 + '1';
++------------+
+| 1001 + '1' |
++------------+
+|       1002 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select '1' + '1';
++-----------+
+| '1' + '1' |
++-----------+
+|         2 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select '1' + 'a1';
++------------+
+| '1' + 'a1' |
++------------+
+|          1 |
++------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select '1' + '1a';
++------------+
+| '1' + '1a' |
++------------+
+|          2 |
++------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select 'a1' + '1';
++------------+
+| 'a1' + '1' |
++------------+
+|          1 |
++------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select '1a' + '1';
++------------+
+| '1a' + '1' |
++------------+
+|          2 |
++------------+
+1 row in set, 1 warning (0.00 sec)
+
+mysql> select 1 + -1;
++--------+
+| 1 + -1 |
++--------+
+|      0 |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select 1 + -2;
++--------+
+| 1 + -2 |
++--------+
+|     -1 |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select -1 + -1;
++---------+
+| -1 + -1 |
++---------+
+|      -2 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select -1 - -1;
++---------+
+| -1 - -1 |
++---------+
+|       0 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select ifnull(1, 2) as R1;
++----+
+| R1 |
++----+
+|  1 |
++----+
+1 row in set (0.00 sec)
+
+mysql> select ifnull(0, 2) as R1;
++----+
+| R1 |
++----+
+|  0 |
++----+
+1 row in set (0.00 sec)
+
+mysql> select ifnull(1, 'sopan') as R1;
++----+
+| R1 |
++----+
+| 1  |
++----+
+1 row in set (0.00 sec)
+
+mysql> select ifnull(0, 'sopan') as R1;
++----+
+| R1 |
++----+
+| 0  |
++----+
+1 row in set (0.00 sec)
+
+mysql> select ifnull(null, 2) as R1;
++----+
+| R1 |
++----+
+|  2 |
++----+
+1 row in set (0.00 sec)
+
+mysql> select ifnull(null, 'sopan') as R1;
++-------+
+| R1    |
++-------+
+| sopan |
++-------+
+1 row in set (0.00 sec)
+
+
+mysql> SELECT sal, comm, IFNULL(COMM + COMM*.25, 1000)R1 FROM emp;
++------+------+---------+
+| sal  | comm | R1      |
++------+------+---------+
+|  800 | NULL | 1000.00 |
+| 1600 |  300 |  375.00 |
+| 1250 |  500 |  625.00 |
+| 2975 | NULL | 1000.00 |
+| 1250 | 1400 | 1750.00 |
+| 2850 | NULL | 1000.00 |
+| 2450 | NULL | 1000.00 |
+| 3000 | NULL | 1000.00 |
+| 5000 | NULL | 1000.00 |
+| 1500 |    0 |    0.00 |
+| 1100 | NULL | 1000.00 |
+|  950 | NULL | 1000.00 |
+| 3000 | NULL | 1000.00 |
+| 1300 | NULL | 1000.00 |
++------+------+---------+
+14 rows in set (0.00 sec)
+
+------------NULLIF-----------------
+
+mysql> select NULLIF(1,1) as R1;
++------+
+| R1   |
++------+
+| NULL |
++------+
+1 row in set (0.00 sec)
+
+mysql> select NULLIF(1,2) as R1;
++------+
+| R1   |
++------+
+|    1 |
++------+
+1 row in set (0.00 sec)
+
+mysql> select NULLIF('sopan','sopan') as R1;
++------+
+| R1   |
++------+
+| NULL |
++------+
+1 row in set (0.00 sec)
+
+------------------is null----is not null-------------
+
+mysql> select isnull(comm) from emp;
++--------------+
+| isnull(comm) |
++--------------+
+|            1 |
+|            0 |
+|            0 |
+|            1 |
+|            0 |
+|            1 |
+|            1 |
+|            1 |
+|            1 |
+|            0 |
+|            1 |
+|            1 |
+|            1 |
+|            1 |
++--------------+
+14 rows in set (0.00 sec) 
+
+mysql> select empno, ename, job,sal,comm from emp where comm is null;
++-------+--------+-----------+------+------+
+| empno | ename  | job       | sal  | comm |
++-------+--------+-----------+------+------+
+|  7369 | SMITH  | CLERK     |  800 | NULL |
+|  7566 | JONES  | MANAGER   | 2975 | NULL |
+|  7698 | BLAKE  | MANAGER   | 2850 | NULL |
+|  7782 | CLARK  | MANAGER   | 2450 | NULL |
+|  7788 | SCOTT  | ANALYST   | 3000 | NULL |
+|  7839 | KING   | PRESIDENT | 5000 | NULL |
+|  7876 | ADAMS  | CLERK     | 1100 | NULL |
+|  7900 | JAMES  | CLERK     |  950 | NULL |
+|  7902 | FORD   | ANALYST   | 3000 | NULL |
+|  7934 | MILLER | CLERK     | 1300 | NULL |
++-------+--------+-----------+------+------+
+10 rows in set (0.00 sec)
+
+mysql> select empno, ename, job,sal,comm from emp where comm is not null;
++-------+--------+----------+------+------+
+| empno | ename  | job      | sal  | comm |
++-------+--------+----------+------+------+
+|  7499 | ALLEN  | SALESMAN | 1600 |  300 |
+|  7521 | WARD   | SALESMAN | 1250 |  500 |
+|  7654 | MARTIN | SALESMAN | 1250 | 1400 |
+|  7844 | TURNER | SALESMAN | 1500 |    0 |
++-------+--------+----------+------+------+
+4 rows in set (0.00 sec)
+
+
+mysql> select empno, ename, job,sal,comm from emp where comm is true;
++-------+--------+----------+------+------+
+| empno | ename  | job      | sal  | comm |
++-------+--------+----------+------+------+
+|  7499 | ALLEN  | SALESMAN | 1600 |  300 |
+|  7521 | WARD   | SALESMAN | 1250 |  500 |
+|  7654 | MARTIN | SALESMAN | 1250 | 1400 |
++-------+--------+----------+------+------+
+3 rows in set (0.00 sec)
+
+mysql> select empno, ename, job,sal,comm from emp where comm is false;
++-------+--------+----------+------+------+
+| empno | ename  | job      | sal  | comm |
++-------+--------+----------+------+------+
+|  7844 | TURNER | SALESMAN | 1500 |    0 |
++-------+--------+----------+------+------+
+1 row in set (0.00 sec)
+
+
+
+
+mysql> select strcmp('A', 'S');
++------------------+
+| strcmp('A', 'S') |
++------------------+
+|               -1 |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select strcmp('S','A');
++-----------------+
+| strcmp('S','A') |
++-----------------+
+|               1 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select strcmp('A','A');
++-----------------+
+| strcmp('A','A') |
++-----------------+
+|               0 |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select least(67,23,34)R1;
++----+
+| R1 |
++----+
+| 23 |
++----+
+1 row in set (0.00 sec)
+
+
+mysql> select greatest(67,23,34)R1;
++----+
+| R1 |
++----+
+| 67 |
++----+
+1 row in set (0.00 sec)
+
+mysql> select greatest('g','r','k')R1;
++----+
+| R1 |
++----+
+| r  |
++----+
+1 row in set (0.00 sec)
+
+mysql> select least('g','r','k')R1;
++----+
+| R1 |
++----+
+| g  |
++----+
+1 row in set (0.00 sec)
+
+
+
+--------------IF(arg1, arg2, arg3)-----------
+mysql>
+mysql> select IF(1>2, 10, 20) as R1;
++----+
+| R1 |
++----+
+| 20 |
++----+
+1 row in set (0.00 sec)
+
+mysql> select IF(2>1, 10, 20) as R1;
++----+
+| R1 |
++----+
+| 10 |
++----+
+1 row in set (0.00 sec)
+
+mysql> select sal, if(sal = 3000, 'OK', 'NOT Bad')R1 from emp;
++------+---------+
+| sal  | R1      |
++------+---------+
+|  800 | NOT Bad |
+| 1600 | NOT Bad |
+| 1250 | NOT Bad |
+| 2975 | NOT Bad |
+| 1250 | NOT Bad |
+| 2850 | NOT Bad |
+| 2450 | NOT Bad |
+| 3000 | OK      |
+| 5000 | NOT Bad |
+| 1500 | NOT Bad |
+| 1100 | NOT Bad |
+|  950 | NOT Bad |
+| 3000 | OK      |
+| 1300 | NOT Bad |
++------+---------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, sal, if(sal=300 AND ename='FORD','TRUE','FALSE')R1 from emp;
++--------+------+-------+
+| ename  | sal  | R1    |
++--------+------+-------+
+| SMITH  |  800 | FALSE |
+| ALLEN  | 1600 | FALSE |
+| WARD   | 1250 | FALSE |
+| JONES  | 2975 | FALSE |
+| MARTIN | 1250 | FALSE |
+| BLAKE  | 2850 | FALSE |
+| CLARK  | 2450 | FALSE |
+| SCOTT  | 3000 | FALSE |
+| KING   | 5000 | FALSE |
+| TURNER | 1500 | FALSE |
+| ADAMS  | 1100 | FALSE |
+| JAMES  |  950 | FALSE |
+| FORD   | 3000 | FALSE |
+| MILLER | 1300 | FALSE |
++--------+------+-------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, sal, if(sal=3000 AND ename='FORD','TRUE','FALSE')R1 from emp;
++--------+------+-------+
+| ename  | sal  | R1    |
++--------+------+-------+
+| SMITH  |  800 | FALSE |
+| ALLEN  | 1600 | FALSE |
+| WARD   | 1250 | FALSE |
+| JONES  | 2975 | FALSE |
+| MARTIN | 1250 | FALSE |
+| BLAKE  | 2850 | FALSE |
+| CLARK  | 2450 | FALSE |
+| SCOTT  | 3000 | FALSE |
+| KING   | 5000 | FALSE |
+| TURNER | 1500 | FALSE |
+| ADAMS  | 1100 | FALSE |
+| JAMES  |  950 | FALSE |
+| FORD   | 3000 | TRUE  |
+| MILLER | 1300 | FALSE |
++--------+------+-------+
+14 rows in set (0.00 sec)
+
+
+mysql> select ename,sal,comm,if(comm IS NULL && ename='FORD','True','False')R1 from emp;
++--------+------+------+-------+
+| ename  | sal  | comm | R1    |
++--------+------+------+-------+
+| SMITH  |  800 | NULL | False |
+| ALLEN  | 1600 |  300 | False |
+| WARD   | 1250 |  500 | False |
+| JONES  | 2975 | NULL | False |
+| MARTIN | 1250 | 1400 | False |
+| BLAKE  | 2850 | NULL | False |
+| CLARK  | 2450 | NULL | False |
+| SCOTT  | 3000 | NULL | False |
+| KING   | 5000 | NULL | False |
+| TURNER | 1500 |    0 | False |
+| ADAMS  | 1100 | NULL | False |
+| JAMES  |  950 | NULL | False |
+| FORD   | 3000 | NULL | True  |
+| MILLER | 1300 | NULL | False |
++--------+------+------+-------+
+14 rows in set, 1 warning (0.00 sec)
+
+mysql> select deptno, if(deptno = 10, 'Sales',if(deptno=20,'Purchase', 'N/A')) 'R1' from emp;
++--------+----------+
+| deptno | R1       |
++--------+----------+
+|     10 | Sales    |
+|     10 | Sales    |
+|     10 | Sales    |
+|     20 | Purchase |
+|     20 | Purchase |
+|     20 | Purchase |
+|     20 | Purchase |
+|     20 | Purchase |
+|     30 | N/A      |
+|     30 | N/A      |
+|     30 | N/A      |
+|     30 | N/A      |
+|     30 | N/A      |
+|     30 | N/A      |
++--------+----------+
+14 rows in set (0.00 sec)

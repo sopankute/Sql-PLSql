@@ -1,0 +1,154 @@
+mysql> select deptno from emp;
++--------+
+| deptno |
++--------+
+|     10 |
+|     10 |
+|     10 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
++--------+
+14 rows in set (0.00 sec)
+
+mysql> select deptno from dept;
++--------+
+| deptno |
++--------+
+|     10 |
+|     20 |
+|     30 |
+|     40 |
++--------+
+4 rows in set (0.00 sec)
+
+mysql> select deptno from emp union select deptno from dept;
++--------+
+| deptno |
++--------+
+|     10 |
+|     20 |
+|     30 |
+|     40 |
++--------+
+4 rows in set (0.01 sec)
+
+mysql> select deptno from emp union all select deptno from dept;
++--------+
+| deptno |
++--------+
+|     10 |
+|     10 |
+|     10 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     10 |
+|     20 |
+|     30 |
+|     40 |
++--------+
+18 rows in set (0.00 sec)
+
+mysql> select deptno from emp union all select deptno from dept order by deptno desc;
++--------+
+| deptno |
++--------+
+|     40 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     10 |
+|     10 |
+|     10 |
+|     10 |
++--------+
+18 rows in set (0.00 sec)
+
+mysql> use demo;
+Database changed
+mysql> select deptno from emp union select deptno from emp order by deptno desc;
++--------+
+| deptno |
++--------+
+|     30 |
+|     20 |
+|     10 |
++--------+
+3 rows in set (0.04 sec)
+
+mysql> (select deptno from emp) union all (select deptno from dept order by deptno desc);
++--------+
+| deptno |
++--------+
+|     10 |
+|     10 |
+|     10 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     10 |
+|     20 |
+|     30 |
+|     40 |
++--------+
+18 rows in set (0.00 sec)
+
+mysql> (select deptno from emp order by deptno desc) union all (select deptno from dept);
++--------+
+| deptno |
++--------+
+|     10 |
+|     10 |
+|     10 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     20 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     30 |
+|     10 |
+|     20 |
+|     30 |
+|     40 |
++--------+
+18 rows in set (0.00 sec)

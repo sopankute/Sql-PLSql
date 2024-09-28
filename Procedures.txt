@@ -1,0 +1,574 @@
+drop procedure if exists pro2;
+delimiter $
+create procedure pro2()
+BEGIN
+     declare x varchar(20) default "hello";
+     declare y varchar(20);
+	set y = "World";
+	
+	select x, y;
+	select concat(x, " ", y);
+END $
+delimiter ;
+
+
+mysql> select ROUTINE_NAME, ROUTINE_TYPE, ROUTINE_BODY from information_schema.routines;
+
+mysql> select ROUTINE_NAME, ROUTINE_TYPE, ROUTINE_BODY from information_schema.routines where routine_schema = 'demo';
++--------------+--------------+--------------+
+| ROUTINE_NAME | ROUTINE_TYPE | ROUTINE_BODY |
++--------------+--------------+--------------+
+| getemp       | PROCEDURE    | SQL          |
+| getname      | PROCEDURE    | SQL          |
+| pro1         | PROCEDURE    | SQL          |
+| pro10        | PROCEDURE    | SQL          |
+| pro11        | PROCEDURE    | SQL          |
+| pro12        | PROCEDURE    | SQL          |
+| pro13        | PROCEDURE    | SQL          |
+| pro14        | PROCEDURE    | SQL          |
+| pro16        | PROCEDURE    | SQL          |
+| pro2         | PROCEDURE    | SQL          |
+| pro4         | PROCEDURE    | SQL          |
+| pro5         | PROCEDURE    | SQL          |
+| pro6         | PROCEDURE    | SQL          |
+| pro7         | PROCEDURE    | SQL          |
+| pro8         | PROCEDURE    | SQL          |
+| pro9         | PROCEDURE    | SQL          |
++--------------+--------------+--------------+
+16 rows in set (0.00 sec)
+
+mysql> select ROUTINE_NAME, ROUTINE_TYPE, ROUTINE_DEFINITION from information_schema.routines
+    -> where routine_schema = 'demo' ;
+
+mysql> select ROUTINE_NAME, ROUTINE_TYPE, ROUTINE_DEFINITION from information_schema.routines
+    -> where routine_schema = 'demo' and routine_name = 'pro16';
+
+
+mysql> use demo;
+Database changed
+mysql> drop procedure if exists pro1;
+Query OK, 0 rows affected (0.09 sec)
+
+
+mysql> drop procedure if exists pro1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> delimiter /
+mysql> create procedure pro1()
+    -> BEGIN
+    -> select "hello World";
+    -> END /
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call pro1;
++-------------+
+| hello World |
++-------------+
+| hello World |
++-------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop procedure if exists pro1;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter /
+mysql> create procedure pro1()
+    -> BEGIN
+    -> select "hello World" as "R1";
+    -> END /
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call pro1;
++-------------+
+| R1          |
++-------------+
+| hello World |
++-------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> delimiter ;
+mysql> drop procedure if exists pro2;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+
+mysql> drop procedure if exists pro2;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> delimiter $
+mysql> create procedure pro2()
+    -> BEGIN
+    ->      declare x varchar(20) default "hello";
+    ->      declare y varchar(20);
+    -> set y = "World";
+    ->
+    -> select x, y;
+    -> select concat(x, " ", y);
+    -> END $
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql>
+mysql> call pro2;
++-------+-------+
+| x     | y     |
++-------+-------+
+| hello | World |
++-------+-------+
+1 row in set (0.00 sec)
+
++-------------------+
+| concat(x, " ", y) |
++-------------------+
+| hello World       |
++-------------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>
+mysql>
+mysql> source D:\procedure.sql
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro2;
++-------+-------+
+| x     | y     |
++-------+-------+
+| hello | World |
++-------+-------+
+1 row in set (0.00 sec)
+
++-------------------+
+| concat(x, " ", y) |
++-------------------+
+| hello World       |
++-------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @y:="Sopan";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro3();
++-------+-------+
+| x     | @y    |
++-------+-------+
+| Hello | Sopan |
++-------+-------+
+1 row in set (0.00 sec)
+
++------------------+
+| concat(x," ",@y) |
++------------------+
+| Hello Sopan      |
++------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro3();
++-------+-------+----------+
+| x     | @y    | @z       |
++-------+-------+----------+
+| Hello | Sopan | Wel-Come |
++-------+-------+----------+
+1 row in set (0.00 sec)
+
++------------------+
+| concat(x," ",@y) |
++------------------+
+| Hello Sopan      |
++------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro3();
+ERROR 1305 (42000): PROCEDURE demo.pro3 does not exist
+mysql> select @z;
++----------+
+| @z       |
++----------+
+| Wel-Come |
++----------+
+1 row in set (0.00 sec)
+
+
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro4(123, 176);
++------+
+| R1   |
++------+
+|  299 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> call pro5(37, 64);
++------+
+| R1   |
++------+
+|  101 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| R2   |
++------+
+|  101 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @sum := 0;
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro6(123, 176, @sum);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @sum;
++------+
+| @sum |
++------+
+|  299 |
++------+
+1 row in set (0.00 sec)
+
+
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> set @sum1=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @sum2=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @sum3=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> set @sum4=0;
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> call pro7(123, 176, @sum1, @sum2, @sum3, @sum4);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @sum1, @sum2, @sum3, @sum4;
++-------+-------+-------+-------+
+| @sum1 | @sum2 | @sum3 | @sum4 |
++-------+-------+-------+-------+
+|   299 |   -53 | 21648 |     1 |
++-------+-------+-------+-------+
+1 row in set (0.00 sec)
+
+
+
+
+mysql> desc emp;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| EMPNO    | int         | NO   | PRI | NULL    |       |
+| ENAME    | varchar(15) | YES  |     | NULL    |       |
+| JOB      | varchar(10) | YES  |     | NULL    |       |
+| MGR      | int         | YES  |     | NULL    |       |
+| HIREDATE | date        | YES  |     | NULL    |       |
+| SAL      | int         | YES  | MUL | NULL    |       |
+| COMM     | int         | YES  |     | NULL    |       |
+| DEPTNO   | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+8 rows in set (0.04 sec)
+
+mysql> desc dept;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| DEPTNO | int         | NO   | PRI | NULL    |       |
+| DNAME  | varchar(20) | YES  |     | NULL    |       |
+| LOC    | varchar(15) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro8(50, 'EnTC', 'pune');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | EnTC       | pune    |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | EnTC       | pune    |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro9(50);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
++--------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro8(50, 'EnTC', 'pune');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | EnTC       | pune    |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | EnTC       | pune    |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> call pro10(50,'IOT', 'Mumbai');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | IOT        | Mumbai  |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql>
+mysql> call pro10(50, 'EnTC', 'Pune');
++--------------------+
+| messsage window    |
++--------------------+
+| Updated Successful |
++--------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | EnTC       | Pune    |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro11(10);
++------+
+| x    |
++------+
+|   10 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro11(60);
++------+
+| x    |
++------+
+| NULL |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> table dept;
++--------+------------+---------+
+| DEPTNO | DNAME      | LOC     |
++--------+------------+---------+
+|     10 | ACCOUNTING | NEWYORK |
+|     20 | RESEARCH   | DALLAS  |
+|     30 | SALES      | CHICAGO |
+|     40 | OPERATIONS | BOSTON  |
+|     50 | EnTC       | Pune    |
++--------+------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro12(50,'IOT','Mumbai');
++--------------------+
+| Window Messsage    |
++--------------------+
+| Updated Successful |
++--------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro12(70,'IOT','Mumbai');
++------------------+
+| Window Messsage  |
++------------------+
+| record Not Found |
++------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> source D:\C-DAC Hydrabad\Lecture videos\MySQL\plsql.sql
+Query OK, 0 rows affected (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro9(50);
++---------------------------+
+| Window Messsage           |
++---------------------------+
+| record Deleted Successful |
++---------------------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call pro9(50);
++------------------+
+| Window Messsage  |
++------------------+
+| record Not Found |
++------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql>
+
+
+
+
+
+

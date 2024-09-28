@@ -1,0 +1,296 @@
+mysql> use demo;
+Database changed
+mysql> select * from emp;
++-------+--------+-----------+------+----------+------+------+--------+
+| EMPNO | ENAME  | JOB       | MGR  | HIREDATE | SAL  | COMM | DEPTNO |
++-------+--------+-----------+------+----------+------+------+--------+
+|  7369 | SMITH  | CLERK     | 7902 | NULL     |  800 | NULL |     20 |
+|  7499 | ALLEN  | SALESMAN  | 7698 | NULL     | 1600 |  300 |     30 |
+|  7521 | WARD   | SALESMAN  | 7698 | NULL     | 1250 |  500 |     30 |
+|  7566 | JONES  | MANAGER   | 7839 | NULL     | 2975 | NULL |     20 |
+|  7654 | MARTIN | SALESMAN  | 7698 | NULL     | 1250 | 1400 |     30 |
+|  7698 | BLAKE  | MANAGER   | 7839 | NULL     | 2850 | NULL |     30 |
+|  7782 | CLARK  | MANAGER   | 7839 | NULL     | 2450 | NULL |     10 |
+|  7788 | SCOTT  | ANALYST   | 7566 | NULL     | 3000 | NULL |     20 |
+|  7839 | KING   | PRESIDENT | NULL | NULL     | 5000 | NULL |     10 |
+|  7844 | TURNER | SALESMAN  | 7698 | NULL     | 1500 |    0 |     30 |
+|  7876 | ADAMS  | CLERK     | 7788 | NULL     | 1100 | NULL |     20 |
+|  7900 | JAMES  | CLERK     | 7698 | NULL     |  950 | NULL |     30 |
+|  7902 | FORD   | ANALYST   | 7566 | NULL     | 3000 | NULL |     20 |
+|  7934 | MILLER | CLERK     | 7782 | NULL     | 1300 | NULL |     10 |
++-------+--------+-----------+------+----------+------+------+--------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, right(job, 3) R1 from emp;
++--------+------+
+| ename  | R1   |
++--------+------+
+| SMITH  | ERK  |
+| ALLEN  | MAN  |
+| WARD   | MAN  |
+| JONES  | GER  |
+| MARTIN | MAN  |
+| BLAKE  | GER  |
+| CLARK  | GER  |
+| SCOTT  | YST  |
+| KING   | ENT  |
+| TURNER | MAN  |
+| ADAMS  | ERK  |
+| JAMES  | ERK  |
+| FORD   | YST  |
+| MILLER | ERK  |
++--------+------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, job, left(job, 3) R1 from emp;
++--------+-----------+------+
+| ename  | job       | R1   |
++--------+-----------+------+
+| SMITH  | CLERK     | CLE  |
+| ALLEN  | SALESMAN  | SAL  |
+| WARD   | SALESMAN  | SAL  |
+| JONES  | MANAGER   | MAN  |
+| MARTIN | SALESMAN  | SAL  |
+| BLAKE  | MANAGER   | MAN  |
+| CLARK  | MANAGER   | MAN  |
+| SCOTT  | ANALYST   | ANA  |
+| KING   | PRESIDENT | PRE  |
+| TURNER | SALESMAN  | SAL  |
+| ADAMS  | CLERK     | CLE  |
+| JAMES  | CLERK     | CLE  |
+| FORD   | ANALYST   | ANA  |
+| MILLER | CLERK     | CLE  |
++--------+-----------+------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, job, left(job, 3) R1, right(job,3) R2 from emp;
++--------+-----------+------+------+
+| ename  | job       | R1   | R2   |
++--------+-----------+------+------+
+| SMITH  | CLERK     | CLE  | ERK  |
+| ALLEN  | SALESMAN  | SAL  | MAN  |
+| WARD   | SALESMAN  | SAL  | MAN  |
+| JONES  | MANAGER   | MAN  | GER  |
+| MARTIN | SALESMAN  | SAL  | MAN  |
+| BLAKE  | MANAGER   | MAN  | GER  |
+| CLARK  | MANAGER   | MAN  | GER  |
+| SCOTT  | ANALYST   | ANA  | YST  |
+| KING   | PRESIDENT | PRE  | ENT  |
+| TURNER | SALESMAN  | SAL  | MAN  |
+| ADAMS  | CLERK     | CLE  | ERK  |
+| JAMES  | CLERK     | CLE  | ERK  |
+| FORD   | ANALYST   | ANA  | YST  |
+| MILLER | CLERK     | CLE  | ERK  |
++--------+-----------+------+------+
+14 rows in set (0.00 sec)
+
+
+mysql> select job, lpad(right(job,3), 10, '*') R1 from emp;
++-----------+------------+
+| job       | R1         |
++-----------+------------+
+| CLERK     | *******ERK |
+| SALESMAN  | *******MAN |
+| SALESMAN  | *******MAN |
+| MANAGER   | *******GER |
+| SALESMAN  | *******MAN |
+| MANAGER   | *******GER |
+| MANAGER   | *******GER |
+| ANALYST   | *******YST |
+| PRESIDENT | *******ENT |
+| SALESMAN  | *******MAN |
+| CLERK     | *******ERK |
+| CLERK     | *******ERK |
+| ANALYST   | *******YST |
+| CLERK     | *******ERK |
++-----------+------------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, replace(ename, 'a',' ') from emp;
++--------+-------------------------+
+| ename  | replace(ename, 'a',' ') |
++--------+-------------------------+
+| SMITH  | SMITH                   |
+| ALLEN  | ALLEN                   |
+| WARD   | WARD                    |
+| JONES  | JONES                   |
+| MARTIN | MARTIN                  |
+| BLAKE  | BLAKE                   |
+| CLARK  | CLARK                   |
+| SCOTT  | SCOTT                   |
+| KING   | KING                    |
+| TURNER | TURNER                  |
+| ADAMS  | ADAMS                   |
+| JAMES  | JAMES                   |
+| FORD   | FORD                    |
+| MILLER | MILLER                  |
++--------+-------------------------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, replace(ename, 'A',' ') from emp;
++--------+-------------------------+
+| ename  | replace(ename, 'A',' ') |
++--------+-------------------------+
+| SMITH  | SMITH                   |
+| ALLEN  |  LLEN                   |
+| WARD   | W RD                    |
+| JONES  | JONES                   |
+| MARTIN | M RTIN                  |
+| BLAKE  | BL KE                   |
+| CLARK  | CL RK                   |
+| SCOTT  | SCOTT                   |
+| KING   | KING                    |
+| TURNER | TURNER                  |
+| ADAMS  |  D MS                   |
+| JAMES  | J MES                   |
+| FORD   | FORD                    |
+| MILLER | MILLER                  |
++--------+-------------------------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, replace(ename, 'A',' $ ') from emp;
++--------+---------------------------+
+| ename  | replace(ename, 'A',' $ ') |
++--------+---------------------------+
+| SMITH  | SMITH                     |
+| ALLEN  |  $ LLEN                   |
+| WARD   | W $ RD                    |
+| JONES  | JONES                     |
+| MARTIN | M $ RTIN                  |
+| BLAKE  | BL $ KE                   |
+| CLARK  | CL $ RK                   |
+| SCOTT  | SCOTT                     |
+| KING   | KING                      |
+| TURNER | TURNER                    |
+| ADAMS  |  $ D $ MS                 |
+| JAMES  | J $ MES                   |
+| FORD   | FORD                      |
+| MILLER | MILLER                    |
++--------+---------------------------+
+14 rows in set (0.00 sec)
+
+mysql> select ename, lower(ename), upper(ename) from emp;
++--------+--------------+--------------+
+| ename  | lower(ename) | upper(ename) |
++--------+--------------+--------------+
+| SMITH  | smith        | SMITH        |
+| ALLEN  | allen        | ALLEN        |
+| WARD   | ward         | WARD         |
+| JONES  | jones        | JONES        |
+| MARTIN | martin       | MARTIN       |
+| BLAKE  | blake        | BLAKE        |
+| CLARK  | clark        | CLARK        |
+| SCOTT  | scott        | SCOTT        |
+| KING   | king         | KING         |
+| TURNER | turner       | TURNER       |
+| ADAMS  | adams        | ADAMS        |
+| JAMES  | james        | JAMES        |
+| FORD   | ford         | FORD         |
+| MILLER | miller       | MILLER       |
++--------+--------------+--------------+
+14 rows in set (0.00 sec)
+
+mysql> select "sopan", lpad("sopan", 10, '*');
++-------+------------------------+
+| sopan | lpad("sopan", 10, '*') |
++-------+------------------------+
+| sopan | *****sopan             |
++-------+------------------------+
+1 row in set (0.00 sec)
+
+mysql> select "sopan", lpad("sopan", 10, '*'),length(lpad("sopan", 10, '*'));
++-------+------------------------+--------------------------------+
+| sopan | lpad("sopan", 10, '*') | length(lpad("sopan", 10, '*')) |
++-------+------------------------+--------------------------------+
+| sopan | *****sopan             |                             10 |
++-------+------------------------+--------------------------------+
+1 row in set (0.00 sec)
+
+mysql>
+
+mysql> select concat(ename,'(',empno,')') from emp;
++-----------------------------+
+| concat(ename,'(',empno,')') |
++-----------------------------+
+| SMITH(7369)                 |
+| ALLEN(7499)                 |
+| WARD(7521)                  |
+| JONES(7566)                 |
+| MARTIN(7654)                |
+| BLAKE(7698)                 |
+| CLARK(7782)                 |
+| SCOTT(7788)                 |
+| KING(7839)                  |
+| TURNER(7844)                |
+| ADAMS(7876)                 |
+| JAMES(7900)                 |
+| FORD(7902)                  |
+| MILLER(7934)                |
++-----------------------------+
+14 rows in set (0.00 sec)
+
+
+mysql> set @number = "8723971246";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select left(@number,4);
++-----------------+
+| left(@number,4) |
++-----------------+
+| 8723            |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> select right(@number,4);
++------------------+
+| right(@number,4) |
++------------------+
+| 1246             |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> select rpad(left(@number,4),5,'*');
++-----------------------------+
+| rpad(left(@number,4),5,'*') |
++-----------------------------+
+| 8723*                       |
++-----------------------------+
+1 row in set (0.00 sec)
+
+mysql> select lpad(right(@number,4),5,'*');
++------------------------------+
+| lpad(right(@number,4),5,'*') |
++------------------------------+
+| *1246                        |
++------------------------------+
+1 row in set (0.00 sec)
+
+mysql> select @number, concat(rpad(left(@number,4),5,'*'), lpad(right(@number,4),5,'*'))R1;
++------------+------------+
+| @number    | R1         |
++------------+------------+
+| 8723971246 | 8723**1246 |
++------------+------------+
+1 row in set (0.00 sec)
+
+mysql> select ename, binary ename from emp where job = "SALESMAN";
++--------+----------------------------+
+| ename  | binary ename               |
++--------+----------------------------+
+| ALLEN  | 0x414C4C454E               |
+| WARD   | 0x57415244                 |
+| MARTIN | 0x4D415254494E             |
+| TURNER | 0x5455524E4552             |
++--------+----------------------------+
+4 rows in set, 1 warning (0.00 sec)
+
+mysql> set @name = "sopan";
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select binary @name;
++----------------------------+
+| binary @name               |
++----------------------------+
+| 0x736F70616E               |
++----------------------------+
+1 row in set, 1 warning (0.00 sec)
